@@ -8,10 +8,19 @@ class MoviesController < ApplicationController
 
   def index
     #@movies = Movie.all
+    #steps for 3:
+    #examine params and session hash
+    #update the session hash
+    ##render or redirect
+    #move detemine_highlighting
+    
+    #set instance variables for view
     @all_ratings = Movie.all_ratings
     @selected_ratings_hash = params[:ratings] || select_all_hash 
     @selected_ratings = selected_ratings
-    @movies = Movie.filter_by_ratings(@selected_ratings)
+    @sorting = params[:sorting] || "id"
+    detemine_highlighting
+    @movies = Movie.filter_and_sort(@selected_ratings,@sorting)
    end
   
   def new 
@@ -58,4 +67,10 @@ class MoviesController < ApplicationController
       #{"G"=>"1","PG"=>"1","PG-13"=>"1","R"=>"1"}
       Hash[@all_ratings.map{|rating| [ rating,"1" ]}]
     end
+  def detemine_highlighting
+  @highlight = {:title=>"",:release_date=>"",:id=>""}
+    #"bg-warning hilite"
+    @highlight[@sorting] = "bg-warning hilite"
+  end
+  
   end
